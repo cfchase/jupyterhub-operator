@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jupyterhub-operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: jupyterhub-operator
+  template:
+    metadata:
+      labels:
+        name: jupyterhub-operator
+    spec:
+      serviceAccountName: jupyterhub-operator
+      containers:
+        - name: jupyterhub-operator
+          # Replace this with the built image name
+          image: REPLACE_IMAGE
+          command:
+          - jupyterhub-operator
+          imagePullPolicy: Always
+          env:
+            - name: WATCH_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: OPERATOR_NAME
+              value: "jupyterhub-operator"
